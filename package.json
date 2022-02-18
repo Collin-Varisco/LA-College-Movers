@@ -1,0 +1,17 @@
+{
+  "name": "la-college-movers",
+  "version": "1.0.0",
+  "description": "A MySQL database system for a moving company.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "mysql2": "^2.3.3",
+    "socket.io": "^4.4.1"
+  }
+}
