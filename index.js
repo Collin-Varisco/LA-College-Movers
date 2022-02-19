@@ -4,7 +4,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const server = require("http").Server(app);
 const ejs = require('ejs');
-const io = require('socket.io')(server);
 server.listen(5000, 'localhost');
 
 app.set("views", "./views");
@@ -56,13 +55,63 @@ app.post('/add', function(req,res){
   });
 });
 
-
+app.post('/sortEmployees', function(req,res){
+  var positions  = [];
+  var franchises = [];
+ 
+  if(req.body.movers     != undefined){ positions.push("Mover");   } 
+  if(req.body.managers   != undefined){ positions.push("Manager"); } 
+  if(req.body.lafayette  != undefined){ franchises.push(1);        } 
+  if(req.body.batonrouge != undefined){ franchises.push(2);        } 
+  if(req.body.neworleans != undefined){ franchises.push(3);        }
+  var sql = 'SELECT * FROM Employee WHERE ';
+  if(positions.length != 0){ 
+    if(positions.length == 1){ sql = sql + 'Position="' + positions[0] + '"'; }
+    else {
+      for(var i = 0; i < positions.length; i++){
+        sql = sql + 'Position="' + positions[i] + '"';
+        if(i != (positions.length - 1)){ sql = sql + " OR "; }
+      }
+    }
+  }
+  if(franchises.length != 0){
+    if(positions.length != 0){ sql = sql + " AND "; } 
+    if(franchises.length == 1){ sql = sql + 'FranchiseID=' + franchises[0]; }
+    else {
+      for(var i = 0; i < franchises.length; i++){
+        sql = sql + 'FranchiseID=' + franchises[i];
+        if(i != (franchises.length - 1)){ sql = sql + " OR "; }
+      }
+    }
+  }
+  if(positions.length != 0 || franchises.length != 0){
+    connection.query(sql, function (err, data, fields) {
+      if (err) throw err;
+      res.render("employees.ejs", {title: 'Employee List', employeeData: data} );
+    })
+  }
+  if(positions.length == 0 && franchises.length == 0){
+    var default_sql='SELECT * FROM Employee';
+    connection.query(default_sql, function (err, data, fields) {
+      if (err) throw err;
+      res.render("employees.ejs", {title: 'Employee List', employeeData: data} );
+    });
+  }
+});
 
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended: true}));
 
 // Home Page
-app.get('/', function(req, res) {
+app.get('/schedule', function(req, res) {
   res.render("schedule_job.ejs");
+});
+
+app.get('/', function(req, res) {
+  var sql='SELECT * FROM Employee';
+  connection.query(sql, function (err, data, fields) {
+    if (err) throw err;
+    res.render("employees.ejs", {title: 'Employee List', employeeData: data} );
+  })
 });
