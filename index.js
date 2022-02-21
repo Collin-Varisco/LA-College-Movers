@@ -6,7 +6,19 @@ const server = require("http").Server(app);
 const ejs = require('ejs');
 server.listen(5000, 'localhost');
 
-// Generate client and job information
+app.set("views", "./views");
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({extended: false}));
+
+// create connection to db
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'MoveDB'
+});
+
+/* Generate client and job information
 const { faker } = require('@faker-js/faker');
 
 function getRandomMonthInt(month){
@@ -74,20 +86,6 @@ function LaCity(){
   return cities[rand];
 }
 
-app.set("views", "./views");
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({extended: false}));
-
-
-
-// create connection to db
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'username',
-  password: 'password',
-  database: 'MovingDB'
-});
-
 function randomFranchise(){
   var max = Math.floor(4);
   var min = Math.ceil(1);
@@ -129,6 +127,7 @@ for(var i = 0; i < 300; i++){
   job_id = job_id + 1;
   client_id = client_id + 1;
 }
+*/
 
 function getEmployeeInfo(){
   connection.query(
@@ -209,6 +208,24 @@ app.post('/sortEmployees', function(req,res){
       res.render("employees.ejs", {title: 'Employee List', employeeData: data} );
     });
   }
+});
+
+// Gets a list of clients. By Default, it lists clients in franchise 1 which
+// is the lafayette location.
+app.get('/clients', function(req, res) {
+    var sql = 'SELECT * FROM ClientInfo WHERE ClientID IN (SELECT ClientID FROM JobInfo WHERE JobInfo.FranchiseID=1)';
+    connection.query(sql, function (err, data, fields) {
+      if (err) throw err;
+      res.render("clients.ejs", {title: 'Job List', employeeData: data} );
+    })
+});
+
+app.get('/jobs', function(req, res) {
+    var sql = 'SELECT * FROM JobInfo ORDER BY jYear DESC, Month DESC, Day DESC';
+    connection.query(sql, function (err, data, fields) {
+      if (err) throw err;
+      res.render("jobs.ejs", {title: 'Job List', employeeData: data} );
+    })
 });
 
 app.set('view engine', 'ejs');
