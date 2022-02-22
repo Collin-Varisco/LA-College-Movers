@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="/css/style.css" />
 <head>
   <title>Jobs</title>
 </head>
@@ -25,14 +26,15 @@
     </form>
     </div>
     <div style="width: 50%; margin: auto; padding: 10px;">
-    <h2>Jobs</h2>
-    <div style="margin: 0 auto;">
+    <div class="center-table">
+        <h2 style="text-align: center;">Jobs</h2>
         <table border="1">
             <tr>
                 <th>Date</th>
                 <th>First Address</th>
                 <th>Destination</th>
-            </tr>
+                <th>Modify</th> 
+                <th>Remove</th>
             
             <%
             if(employeeData.length!=0){
@@ -43,9 +45,8 @@
                 <td><%=data.Month %>-<%=data.Day %>-<%=data.jYear %></td>
                 <td><%=data.OriginalStreetAddress %><br><%=data.OriginalCity %>, Louisiana</td>
                 <td><%=data.DestinationStreetAddress %><br><%=data.DestinationCity %>, Louisiana</td>
-                <td><a href="/jobs/edit/<%=data.JobID%>">Edit | </a>
-                <a href="/jobs/delete/<%=data.JobID%>">Delete</a></td>
-            </tr>
+                <td><a href="/jobs/edit/<%=data.JobID%>">Edit</td>
+                <td><a href="/jobs/delete/<%=data.JobID%>">Delete</a></td>
             <%  i++; }) %>
             <% } else{ %>
                 <tr>

@@ -238,9 +238,5 @@ app.get('/schedule', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-  var sql='SELECT * FROM Employee';
-  connection.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.render("employees.ejs", {title: 'Employee List', employeeData: data} );
-  })
+    res.render("index.ejs");
 });
