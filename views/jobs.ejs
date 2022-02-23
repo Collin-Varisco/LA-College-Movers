@@ -6,21 +6,39 @@
 </head>
 <body>
     
-    <div style="float: left; width: 10%;">
-    <form action="/sortEmployees" method="POST">
+    <div class="options-panel">
+    <form action="/sortJobs" method="POST">
         <fieldset>
-            <h3>Positions</h3>
-            <input type="checkbox" id="movers" name="movers">
-            <label for="movers">Mover</label><br>
-            <input type="checkbox" id="managers" name="managers">
-            <label for="manager">Manager</label><br>
             <h3>Franchises</h1>
             <input type="checkbox" id="lafayette" name="lafayette">
-            <label for="lafayette">Lafayette</label><br>
+            <label for="lafayette">Lafayette</label>
             <input type="checkbox" id="batonrouge" name="batonrouge">
-            <label for="batonrouge">Baton Rouge</label><br>
+            <label for="batonrouge">Baton Rouge</label>
             <input type="checkbox" id="neworleans" name="neworleans">
-            <label for="neworleans">New Orleans</label><br><br>
+            <label for="neworleans">New Orleans</label>
+            <h3>Year/Month</h3>
+            <select name="year">
+              <option value="0">All Years</option>
+              <option value="2022">2022</option>
+              <option value="2021">2021</option>
+              <option value="2019">2019</option>
+              <option value="2020">2020</option>
+            </select>
+            <select name="month">
+              <option value="0">All Months</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
             <input type="submit" name="submit" value="Submit">
         </fieldset>
     </form>

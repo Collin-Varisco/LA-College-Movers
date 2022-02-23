@@ -210,6 +210,47 @@ app.post('/sortEmployees', function(req,res){
   }
 });
 
+app.post('/sortJobs', function(req,res){
+  var franchises = []; 
+  if(req.body.lafayette  != undefined){ franchises.push(1);        } 
+  if(req.body.batonrouge != undefined){ franchises.push(2);        } 
+  if(req.body.neworleans != undefined){ franchises.push(3);        }
+  var sql = 'SELECT Month, Day, jYear, OriginalStreetAddress, OriginalCity, DestinationStreetAddress, DestinationCity FROM JobInfo ';
+  if(franchises.length != 0){
+    sql = sql + 'WHERE ';
+    if(franchises.length == 1){ sql = sql + 'FranchiseID=' + franchises[0]; }
+    else {
+      for(var i = 0; i < franchises.length; i++){
+        sql = sql + 'FranchiseID=' + franchises[i];
+        if(i != (franchises.length - 1)){ sql = sql + " OR "; }
+      }
+    }
+  }
+  var selected_month = req.body.month;
+  var selected_year = req.body.year;
+  if(franchises.length == 0 && (selected_month != '0' || selected_year != '0')){
+    sql = sql + 'WHERE ';
+    if(selected_year != '0'){
+      sql = sql + 'jYear=' + selected_year;
+    }
+    if(selected_month != '0' && selected_year != '0'){
+      sql = sql + ' AND Month=' + selected_month;   
+    }
+    if(selected_month != '0' && selected_year == '0'){
+      sql = sql + ' Month=' + selected_month;   
+    }
+  }
+  if(franchises.length > 0 && (selected_month != '0' || selected_year != '0')){
+    if(selected_year != '0'){ sql = sql + ' AND jYear=' + selected_year; }
+    if(selected_month != '0'){ sql = sql + ' AND Month=' + selected_month; }
+  }
+
+  sql = sql + ' ORDER BY jYear DESC, Month DESC, Day DESC';
+  connection.query(sql, function (err, data, fields) {
+    if (err) throw err;
+    res.render("jobs.ejs", {title: 'Employee List', employeeData: data} );
+  })
+});
 // Gets a list of clients. By Default, it lists clients in franchise 1 which
 // is the lafayette location.
 app.get('/clients', function(req, res) {
