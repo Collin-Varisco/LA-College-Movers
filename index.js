@@ -129,16 +129,8 @@ for(var i = 0; i < 300; i++){
 }
 */
 
-function getEmployeeInfo(){
-  connection.query(
-    'SELECT * FROM `Employee`',
-    function(err, results, fields) {
-      console.log(results); // results contains rows returned by server
-    }
-  );
-}
-
 // Check if the date is valid during when scheduling
+// TODO check for valid month and day of a valid month
 function validDate(Day, Month, year){
   var validDate = true;
   var currentYear = new Date().getFullYear();
@@ -149,6 +141,9 @@ function validDate(Day, Month, year){
   return validDate;
 }
 
+
+// Adds a client to the ClientInfo table and adds job information to the JobInfo table.
+// is used from "localhost:5000/schedule"
 app.post('/add', function(req,res){
   if(validDate(req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear) == false){
     const data = new Object();
@@ -183,6 +178,22 @@ app.post('/add', function(req,res){
   }
 });
 
+// SQL Can be Improved
+app.get("/employees", function(req,res){
+  var sql = "SELECT * FROM Employee ORDER BY FranchiseID ASC";
+    connection.query(
+      sql,
+      (error, data) => {
+        if (error) { console.log(error) };
+        res.render("employees.ejs", { title: 'employee-data', employeeData: data } );
+    });
+});
+
+// Receives sorting parameters to sort employees on the employees page
+// TODO 
+// - If submitted without any sorting parameters, it should return employees
+//   sorted by FranchiseID in ascending order.
+// - html/css need work.
 app.post('/sortEmployees', function(req,res){
   var positions  = [];
   var franchises = [];
@@ -192,6 +203,7 @@ app.post('/sortEmployees', function(req,res){
   if(req.body.lafayette  != undefined){ franchises.push(1);        } 
   if(req.body.batonrouge != undefined){ franchises.push(2);        } 
   if(req.body.neworleans != undefined){ franchises.push(3);        }
+  // Form SQL
   var sql = 'SELECT * FROM Employee WHERE ';
   if(positions.length != 0){ 
     if(positions.length == 1){ sql = sql + 'Position="' + positions[0] + '"'; }
@@ -227,6 +239,7 @@ app.post('/sortEmployees', function(req,res){
   }
 });
 
+// Receives job sorting parameters, forms sql syntax, executes sql and returns results to jobs page.
 app.post('/sortJobs', function(req,res){
   var franchises = []; 
   if(req.body.lafayette  != undefined){ franchises.push(1);        } 
@@ -245,6 +258,8 @@ app.post('/sortJobs', function(req,res){
   }
   var selected_month = req.body.month;
   var selected_year = req.body.year;
+  // selected_month or selected_year being equal to '0' means that they not changed from 
+  // the default value of showing all months and years.
   if(franchises.length == 0 && (selected_month != '0' || selected_year != '0')){
     sql = sql + 'WHERE ';
     if(selected_year != '0'){
@@ -268,6 +283,7 @@ app.post('/sortJobs', function(req,res){
     res.render("jobs.ejs", {title: 'Employee List', employeeData: data} );
   })
 });
+
 // Gets a list of clients. By Default, it lists clients in franchise 1 which
 // is the lafayette location.
 app.get('/clients', function(req, res) {
@@ -278,6 +294,8 @@ app.get('/clients', function(req, res) {
     })
 });
 
+
+// Sorts jobs by date in descending order and returns the results to the jobs page.
 app.get('/jobs', function(req, res) {
     var sql = 'SELECT * FROM JobInfo ORDER BY jYear DESC, Month DESC, Day DESC';
     connection.query(sql, function (err, data, fields) {
@@ -286,25 +304,16 @@ app.get('/jobs', function(req, res) {
     })
 });
 
-app.set('view engine', 'ejs');
-
-app.use(express.urlencoded({extended: true}));
 
 // Redirect to page where user registers client and schedules job.
 app.get('/schedule', function(req, res) {
   res.render("schedule_job.ejs");
 });
 
-/* Redirect to this page whenever there is a conflict
- * This is for testing page
- * res.render("schedule_conflict.ejs", {title: 'Conflict', conflictData: data}); will be called
- * inside the app.post("/add") function 
-*/
-app.get('/conflict', function(req, res) {
-  res.render('schedule_conflict.ejs');
-});
-
-
+// Home page menu when website is activated.
 app.get('/', function(req, res) {
     res.render("index.ejs");
 });
+
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({extended: true}));
