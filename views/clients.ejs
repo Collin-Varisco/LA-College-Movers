@@ -2,19 +2,14 @@
 <html lang="en">
 <link rel="stylesheet" href="/css/style.css" />
 <head>
-  <title>Employees</title>
+  <title>Clients</title>
   
 </head>
 <body>
     
-    <div style="float: left; width: 10%;">
+    <div class="options-panel">
     <form action="/sortEmployees" method="POST">
         <fieldset>
-            <h3>Positions</h3>
-            <input type="checkbox" id="movers" name="movers">
-            <label for="movers">Mover</label><br>
-            <input type="checkbox" id="managers" name="managers">
-            <label for="manager">Manager</label><br>
             <h3>Franchises</h1>
             <input type="checkbox" id="lafayette" name="lafayette">
             <label for="lafayette">Lafayette</label><br>
@@ -27,14 +22,14 @@
     </form>
     </div>
     <div style="width: 50%; margin: auto; padding: 10px;">
-    <h2>Employee Information</h2>
     <div style="margin: 0 auto;">
+        <div class="center-table">
+        <h2>Clients</h2>
         <table border="1">
             <tr>
-                <th>Employee ID#</th>
+                <th>Client ID#</th>
                 <th>Full Name</th>
-                <th>Position</th>
-                <th>Franchise</th>
+                <th>Phone Number</th>
                 <th>Modify</th>
             </tr>
             
@@ -45,12 +40,10 @@
             %>
             <tr>
                
-                <td><%=data.EmployeeID %></td>
+                <td><%=data.ClientID %></td>
                 <td><%=data.Fname %> <%=data.Lname %></td>
-                <td><%=data.Position %></td>
-                <td><%=data.FranchiseID %></td>
-                <td><a href="/employees/edit/<%=data.id%>">Edit | </a>
-                <a href="/employees/delete/<%=data.id%>">Delete</a></td>
+                <td><%=data.PhoneNumber %></td>
+                <td><a href="/employees/edit/<%=data.id%>">Edit</a>
             </tr>
             <%  i++; }) %>
             <% } else{ %>
@@ -59,6 +52,7 @@
                 </tr>
             <% } %>
         </table>
+        </div>
     </div>
 </body>
 </html>

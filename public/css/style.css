@@ -1,5 +1,5 @@
 html {
-  background-color: black;
+  background-color: #121212;
 }
 body {
   width: 100%;
@@ -34,6 +34,7 @@ th {
 .center-table {
   margin: auto;
   width: 60%;
+  text-align: center;
 }
 
 .options-panel {
@@ -41,4 +42,26 @@ th {
   position: absolute;
   margin-left: 5%;
   margin-top: 10%;
+}
+
+
+.schedule-panel {
+  width: 40%;
+  position: absolute;
+  margin-left: 5%;
+}
+
+.conflicts-panel {
+
+  border: 1px solid #efefef;
+}
+
+.conflict-container {
+  width: 40%;
+  float: right;
+  margin-right: 5%;
+}
+
+#error {
+  color: Red;
 }

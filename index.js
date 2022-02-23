@@ -138,32 +138,49 @@ function getEmployeeInfo(){
   );
 }
 
+// Check if the date is valid during when scheduling
+function validDate(Day, Month, year){
+  var validDate = true;
+  var currentYear = new Date().getFullYear();
+  // Must be currentYear or next year
+  if(year != currentYear && year != (currentYear + 1)){
+    validDate = false;
+  }
+  return validDate;
+}
 
 app.post('/add', function(req,res){
-  connection.query(
-    'SELECT COUNT(*) FROM `ClientInfo`',
-    function(err, results, fields) {
-      var client_id = results[0]["COUNT(*)"] + 1; // get Unique Client Id
-      connection.query(
-        'INSERT INTO ClientInfo (ClientID,PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?, ?)',
-        [client_id, req.body.PhoneNumber, req.body.ClientEmail, req.body.ClientFname, req.body.ClientLname],
-        (error, results) => {
-          if (error) { console.log(error) };
-          console.log("Client Added");
-          connection.query(
-            'SELECT COUNT(*) FROM `JobInfo`',
-            function(err, results, fields) {
-              var job_id = results[0]["COUNT(*)"] + 1; // get Unique Job Id
-              connection.query(
-                'INSERT INTO JobInfo (JobID,Day,Month,jYear,ClientID,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [job_id, req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear, client_id, req.body.OriginalCity, req.body.OriginalStreet, req.body.DestinationCity, req.body.DestinationStreet],
-                (error, results) => {
-                  if (error) { console.log(error) };
-                  console.log("Job Added");
-              });
-          });
-      });
-  });
+  if(validDate(req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear) == false){
+    const data = new Object();
+    data.error = "  Invalid Date";
+    res.render("schedule_conflict.ejs", { title: 'schedule-conflict', employeeData: data } );
+  }
+  else {
+    connection.query(
+      'SELECT COUNT(*) FROM `ClientInfo`',
+      function(err, results, fields) {
+        var client_id = results[0]["COUNT(*)"] + 1; // get Unique Client Id
+        connection.query(
+          'INSERT INTO ClientInfo (ClientID,PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?, ?)',
+          [client_id, req.body.PhoneNumber, req.body.ClientEmail, req.body.ClientFname, req.body.ClientLname],
+          (error, results) => {
+            if (error) { console.log(error) };
+            console.log("Client Added");
+            connection.query(
+              'SELECT COUNT(*) FROM `JobInfo`',
+              function(err, results, fields) {
+                var job_id = results[0]["COUNT(*)"] + 1; // get Unique Job Id
+                connection.query(
+                  'INSERT INTO JobInfo (JobID,Day,Month,jYear,ClientID,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                  [job_id, req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear, client_id, req.body.OriginalCity, req.body.OriginalStreet, req.body.DestinationCity, req.body.DestinationStreet],
+                  (error, results) => {
+                    if (error) { console.log(error) };
+                    console.log("Job Added");
+                });
+            });
+        });
+    });
+  }
 });
 
 app.post('/sortEmployees', function(req,res){
@@ -273,10 +290,20 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended: true}));
 
-// Home Page
+// Redirect to page where user registers client and schedules job.
 app.get('/schedule', function(req, res) {
   res.render("schedule_job.ejs");
 });
+
+/* Redirect to this page whenever there is a conflict
+ * This is for testing page
+ * res.render("schedule_conflict.ejs", {title: 'Conflict', conflictData: data}); will be called
+ * inside the app.post("/add") function 
+*/
+app.get('/conflict', function(req, res) {
+  res.render('schedule_conflict.ejs');
+});
+
 
 app.get('/', function(req, res) {
     res.render("index.ejs");
