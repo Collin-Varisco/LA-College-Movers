@@ -6,6 +6,7 @@
   
 </head>
 <body>
+    <button class="home-button" onclick="location.href='/'">Home</button> 
     
     <div class="options-panel">
     <form action="/sortEmployees" method="POST">
@@ -21,14 +22,12 @@
         </fieldset>
     </form>
     </div>
-    <div style="width: 50%; margin: auto; padding: 10px;">
-    <div style="margin: 0 auto;">
-        <div class="center-table">
-        <h2>Clients</h2>
-        <table border="1">
+        <h2 class="textAlignC">Clients</h2>
+        <table class="center-table" border="1">
             <tr>
                 <th>Client ID#</th>
                 <th>Full Name</th>
+                <th>Email</th>
                 <th>Phone Number</th>
                 <th>Modify</th>
             </tr>
@@ -42,6 +41,7 @@
                
                 <td><%=data.ClientID %></td>
                 <td><%=data.Fname %> <%=data.Lname %></td>
+                <td><%=data.Email %></td>
                 <td><%=data.PhoneNumber %></td>
                 <td><a href="/employees/edit/<%=data.id%>">Edit</a>
             </tr>
@@ -52,7 +52,5 @@
                 </tr>
             <% } %>
         </table>
-        </div>
-    </div>
 </body>
 </html>
