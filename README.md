@@ -38,4 +38,6 @@ Or
 ```sh
 node index.js
 ```
-
+# Access Website
+- Open Browser
+- Enter this into URL bar: [http://localhost:5000](http://localhost:5000)
