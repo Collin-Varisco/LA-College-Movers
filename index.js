@@ -3,8 +3,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const server = require("http").Server(app);
-const ejs = require('ejs');
-server.listen(5000, 'localhost');
+const ejs = require('ejs'); server.listen(5000, 'localhost');
+const util = require('util');
 
 app.set("views", "./views");
 app.use(express.static(__dirname + '/public'));
@@ -18,7 +18,8 @@ const connection = mysql.createConnection({
   database: 'MoveDB'
 });
 
-/* Generate client and job information
+// Generate client and job information
+/*
 const { faker } = require('@faker-js/faker');
 
 function getRandomMonthInt(month){
@@ -93,9 +94,7 @@ function randomFranchise(){
   return rand;
 }
 
-var job_id = 1;
-var client_id = job_id + 1000;
-for(var i = 0; i < 300; i++){
+for(var i = 0; i < 350; i++){
   var fName = faker.name.firstName();
   var lName = faker.name.lastName();
   var number = faker.phone.phoneNumberFormat();
@@ -109,25 +108,38 @@ for(var i = 0; i < 300; i++){
   var originalCity = LaCity();
   var destinationCity = LaCity();
 
-  connection.query(
-    'INSERT INTO ClientInfo (ClientID,PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?, ?)',
-    [client_id, number, email, fName, lName],
-    (error, results) => {
-      if (error) { console.log(error) };
-      console.log("Client Added");
-    });
+  const query = util.promisify(connection.query).bind(connection);
+  (async () => {
+    try {
+      connection.query(
+        'INSERT INTO ClientInfo (PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?)',
+        [number, email, fName, lName],
+        (error, results) => {
+          if (error) { console.log(error) };
+      }); 
+    } finally { 
+      console.log("Finished insert.")
+    }
+  })();
 
-    connection.query(
-      'INSERT INTO JobInfo (JobID,Day,Month,jYear,ClientID,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress,FranchiseID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [job_id, day, month, year, client_id, originalCity, originalStreet, destinationCity, destinationStreet, randomFranchise()],
-      (error, results) => {
-        if (error) { console.log(error) };
-        console.log("Job Added");
-    });
-  job_id = job_id + 1;
-  client_id = client_id + 1;
-}
+  var mSQL='SELECT ClientID FROM `ClientInfo` WHERE `PhoneNumber`="'+number+'"';
+  connection.query(
+    mSQL,
+    (error, data) => {
+      if (error) { console.log(error) };
+      var client_id = data[0]["ClientID"];
+      connection.query(
+        'INSERT INTO JobInfo (ClientID,Day,Month,jYear,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress,FranchiseID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [client_id, day, month, year, originalCity, originalStreet, destinationCity, destinationStreet, randomFranchise()],
+        (error, results) => {
+          if (error) { console.log(error) };
+          console.log("Job Added");
+      });
+    }
+  );
+}       
 */
+
 
 // Check if the date is valid during when scheduling
 // TODO check for valid month and day of a valid month
