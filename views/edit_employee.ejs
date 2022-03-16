@@ -12,7 +12,7 @@
 
 
 		<body>
-				<form action="/editEmployee" onsubmit="goBack()" method="POST">
+				<form action="/editEmployee" onsubmit="return goBack()" method="POST" id="editEmployeeForm">
 						<fieldset>
 								<p>First/Last Name</p>
 								<input type="text" name="Fname" placeholder="<%=employeeData.Fname %>"></input></h2>
@@ -46,7 +46,7 @@
 								<input type="hidden" id="hiddenPosition" name="EmployeePosition" value="<%=employeeData.Position%>">
 								<input type="hidden" id="hiddenFranchiseID" name="FranchiseID" value="<%=employeeData.FranchiseID%>">
 								<br></br>
-								<input type="submit" name="submit" value="Submit Changes">
+								<input type="submit" name="submit" value="Submit" form="editEmployeeForm">
 				</fieldset>
 		</form>
 		</body>
@@ -57,7 +57,7 @@
 				document.getElementById("fran").value = FranchiseID;
 				document.getElementById("pos").value = position;
 				function goBack(){
-						window.location.href = "http://localhost:5000/employees";
+						window.location.href = window.location.href.split("/edit")[0] + "/employees";
 				}
 		</script>
 </html>

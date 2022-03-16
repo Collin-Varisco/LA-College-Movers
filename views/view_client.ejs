@@ -1,0 +1,32 @@
+<html>
+		<style>
+				body {
+						background-color: #121212;
+						color: #efefef;
+						width: 50%;
+						margin: 0 auto;
+						text-align:center;
+						margin-top: 20%;
+				}
+		</style>
+
+
+		<body>
+								<p>Full Name: <%=clientData.Fname %> <%=clientData.Lname %></p>
+								<p>Phone Number: <%=clientData.PhoneNumber%></p>
+								<p>Email Address: <%=clientData.Email%></p>
+								<p>Client ID# <%=clientData.ClientID%></p>
+								<br></br>
+								<button onclick="history.back()">Go Back</button>
+		</body>
+		<script>
+				var position = document.getElementById("hiddenPosition").value;
+				var EmpID = document.getElementById("hiddenID").value;
+				var FranchiseID = document.getElementById("hiddenFranchiseID").value;
+				document.getElementById("fran").value = FranchiseID;
+				document.getElementById("pos").value = position;
+				function goBack(){
+						window.location.href = "http://localhost:5000/employees";
+				}
+		</script>
+</html>

@@ -3,7 +3,7 @@ html {
 }
 
 a {
-  color: Red;
+		color: #537895;
 }
 body {
   width: 100%;
@@ -29,8 +29,16 @@ th {
 	padding-right: 15px;
   padding-top: 5px;
   padding-bottom: 5px;
-	border-bottom: 1px solid #efefef;
-  color: #efefef;
+  border-bottom: 1px solid #efefef;
+}
+
+
+th {
+		color: #efefef;
+}
+
+#ClientInfo, #jobDate, #idCell, #editCell {
+		text-align: center;
 }
 
 .textAlignC {

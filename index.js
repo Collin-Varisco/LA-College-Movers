@@ -30,8 +30,11 @@ app.get('/', function(req, res) {
     res.render("index.ejs");
 });
 
+
 app.get('/clients', function(req, res) {
-    var sql = 'SELECT * FROM ClientInfo WHERE ClientID IN (SELECT ClientID FROM JobInfo WHERE JobInfo.FranchiseID=1)';
+		  // sql for clients at Franchise #1
+    //var sql = 'SELECT * FROM ClientInfo WHERE ClientID IN (SELECT ClientID FROM JobInfo WHERE JobInfo.FranchiseID=1)';
+		  var sql = 'SELECT * FROM ClientInfo';
     db.all(sql, function (err, data, fields) {
       if (err){ throw err }
 						else {
@@ -67,7 +70,7 @@ app.get("/employees", function(req,res){
 });
 
 app.get("/edit/employees", function(req, res){
-		const employee_id = req.query.id;
+		var employee_id = req.query.id;
 		sql = "SELECT * FROM Employee WHERE EmployeeID='" + employee_id + "'";
 		db.each(sql, (err, data) => {
 				if(err){
@@ -78,6 +81,19 @@ app.get("/edit/employees", function(req, res){
 		});
 });
 
+app.get('/client_info', function(req,res) {
+		var clientID = req.query.id;
+		var sql = "SELECT * FROM ClientInfo WHERE ClientID="+clientID;
+		db.each(sql, (err, data) => {
+				if(err){
+						console.log(err);
+				} else {
+						res.render('view_client.ejs', { title: 'client-data', clientData: data } );
+				}
+		});
+
+})
+
 // SORT Functions
 // -----------------------------
 // Receives job sorting parameters, forms sql syntax, executes sql and returns results to jobs page.
@@ -86,7 +102,7 @@ app.post('/sortJobs', function(req,res){
   if(req.body.lafayette  != undefined){ franchises.push(1); }
   if(req.body.batonrouge != undefined){ franchises.push(2); }
   if(req.body.neworleans != undefined){ franchises.push(3); }
-  var sql = 'SELECT Month, Day, jYear, OriginalStreetAddress, OriginalCity, DestinationStreetAddress, DestinationCity FROM JobInfo ';
+  var sql = 'SELECT ClientID, Month, Day, jYear, OriginalStreetAddress, OriginalCity, DestinationStreetAddress, DestinationCity FROM JobInfo ';
   if(franchises.length != 0){
     sql = sql + 'WHERE ';
     if(franchises.length == 1){ sql = sql + 'FranchiseID=' + franchises[0]; }
@@ -252,7 +268,7 @@ app.post('/editEmployee', function(req,res){
 								console.log("Employee Information Updated");
 						}
 		});
-
+		res.redirect("/employees");
 });
 
 
