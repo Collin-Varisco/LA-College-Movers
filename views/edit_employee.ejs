@@ -1,0 +1,63 @@
+<html>
+		<style>
+				body {
+						background-color: #121212;
+						color: #efefef;
+						width: 50%;
+						margin: 0 auto;
+						text-align:center;
+						margin-top: 20%;
+				}
+		</style>
+
+
+		<body>
+				<form action="/editEmployee" onsubmit="goBack()" method="POST">
+						<fieldset>
+								<p>First/Last Name</p>
+								<input type="text" name="Fname" placeholder="<%=employeeData.Fname %>"></input></h2>
+								<input type="text" name="Lname" placeholder="<%=employeeData.Lname %>"></input>
+								<br></br>
+								<p id="franchise-id">Franchise:
+								<%
+								if(employeeData.FranchiseID==1){%>
+										Lafayette
+								<% } else if(employeeData.FranchiseID==2){ %>
+										Baton Rouge
+								<% } else if(employeeData.FranchiseID==3){ %>
+										New Orleans
+								<% } %>
+								</p>
+
+								<select name="Franchise" id="fran">
+												<option value="1">Lafayette</option>
+												<option value="2">Baton Rouge</option>
+												<option value="3">New Orleans</option>
+								</select>
+
+								<p>Position:   <%=employeeData.Position %></p>
+
+								<select name="Position" id="pos">
+												<option value="Mover">Mover</option>
+												<option value="Manager">Manager</option>
+												<option value="Customer Support">Customer Support</option>
+								</select>
+								<input type="hidden" id="hiddenID" name="EmployeeID" value="<%=employeeData.EmployeeID%>">
+								<input type="hidden" id="hiddenPosition" name="EmployeePosition" value="<%=employeeData.Position%>">
+								<input type="hidden" id="hiddenFranchiseID" name="FranchiseID" value="<%=employeeData.FranchiseID%>">
+								<br></br>
+								<input type="submit" name="submit" value="Submit Changes">
+				</fieldset>
+		</form>
+		</body>
+		<script>
+				var position = document.getElementById("hiddenPosition").value;
+				var EmpID = document.getElementById("hiddenID").value;
+				var FranchiseID = document.getElementById("hiddenFranchiseID").value;
+				document.getElementById("fran").value = FranchiseID;
+				document.getElementById("pos").value = position;
+				function goBack(){
+						window.location.href = "http://localhost:5000/employees";
+				}
+		</script>
+</html>

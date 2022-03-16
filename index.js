@@ -66,6 +66,18 @@ app.get("/employees", function(req,res){
 		});
 });
 
+app.get("/edit/employees", function(req, res){
+		const employee_id = req.query.id;
+		sql = "SELECT * FROM Employee WHERE EmployeeID='" + employee_id + "'";
+		db.each(sql, (err, data) => {
+				if(err){
+						console.log(err);
+				} else {
+						res.render('edit_employee.ejs', { title: 'employee-data', employeeData: data } );
+				}
+		});
+});
+
 // SORT Functions
 // -----------------------------
 // Receives job sorting parameters, forms sql syntax, executes sql and returns results to jobs page.
@@ -193,7 +205,7 @@ app.post('/add', function(req,res){
 						(error, results) => {
 								if (error) { console.log(error) };
 								console.log("Client Added");
-		});
+				});
 				var clientID_sql = "SELECT ClientID FROM ClientInfo WHERE PhoneNumber='" + req.body.PhoneNumber + "' AND Email='" + req.body.ClientEmail + "'";
 				db.all(clientID_sql, (err, data) => {
 					if(err){
@@ -211,6 +223,36 @@ app.post('/add', function(req,res){
 					}
 				});
 		}
+});
+
+app.post('/editEmployee', function(req,res){
+		var fBlank = false;
+		var lBlank = false;
+		if(req.body.Fname==""){
+				fBlank = true;
+		}
+		if(req.body.Lname==""){
+				lBlank = true;
+		}
+		var sql = "UPDATE Employee SET ";
+		if(fBlank == false){
+				sql = sql + "Fname='" + req.body.Fname + "', ";
+		}
+		if(lBlank == false){
+				sql = sql + "Lname='" + req.body.Lname + "', ";
+		}
+		sql = sql + "FranchiseID=" + req.body.Franchise + ", ";
+		sql = sql + "Position='" + req.body.Position + "' WHERE EmployeeID=" + req.body.EmployeeID;
+		console.log(sql);
+
+		db.run(
+			 sql, [], (error, results) => {
+						if (error) { console.log(error) }
+						else {
+								console.log("Employee Information Updated");
+						}
+		});
+
 });
 
 

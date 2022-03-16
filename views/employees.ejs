@@ -5,7 +5,7 @@
   <title>Employees</title>
 </head>
 <body>
-    <button class="home-button" onclick="location.href='/'">Home</button> 
+    <button class="home-button" onclick="location.href='/'">Home</button>
     <div class="options-panel">
     <form action="/sortEmployees" method="POST">
         <fieldset>
@@ -29,20 +29,20 @@
                 <th>Franchise</th>
                 <th>Modify</th>
             </tr>
-            
+
             <%
             if(employeeData.length!=0){
             var i=1;
             employeeData.forEach(function(data){
             %>
             <tr>
-               
+
                 <td><%=data.EmployeeID %></td>
                 <td><%=data.Fname %> <%=data.Lname %></td>
                 <td><%=data.Position %></td>
                 <td><%=data.FranchiseID %></td>
-              <td><a href="/employees/edit/<%=data.id%>">Edit</a><br>
-                <a href="/employees/delete/<%=data.id%>">Delete</a></td>
+																<td><a href="/edit/employees?id=<%=data.EmployeeID%>">Edit</a><br>
+                <a href="/employees/delete/<%=data.EmployeeID%>">Delete</a></td>
             </tr>
             <%  i++; }) %>
             <% } else{ %>
