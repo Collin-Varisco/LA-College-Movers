@@ -63,7 +63,7 @@
                 <td><%=data.DestinationStreetAddress %><br><%=data.DestinationCity %>, Louisiana</td>
 																<td style="text-align: center;"><a href="/client_info?id=<%=data.ClientID %>">Client Info</a></td>
 																<td><a href="/jobs/edit/<%=data.JobID%>">Edit</a></td>
-                <td><a href="/jobs/delete/<%=data.JobID%>">Delete</a></td>
+                <td><a href="/delete_job_confirmation?id=<%=data.JobID%>">Delete</a></td>
             <%  i++; }) %>
             <% } else{ %>
                 <tr>

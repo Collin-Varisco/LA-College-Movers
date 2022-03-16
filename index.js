@@ -30,6 +30,15 @@ app.get('/', function(req, res) {
     res.render("index.ejs");
 });
 
+app.get('/delete_job_confirmation', function(req,res){
+		var sql = "SELECT * FROM JobInfo WHERE JobID=" + req.query.id;
+		db.each(sql, function(err, data) {
+				if(err){ throw err }
+				else {
+					res.render('delete_job_confirmation.ejs', { title: 'Job Info', jobData: data } );
+				}
+		});
+});
 
 app.get('/clients', function(req, res) {
 		  // sql for clients at Franchise #1
@@ -269,6 +278,18 @@ app.post('/editEmployee', function(req,res){
 						}
 		});
 		res.redirect("/employees");
+});
+
+app.post('/deleteJob', function(req,res){
+		var sql = 'DELETE FROM JobInfo WHERE JobID=' + req.query.id;
+		console.log(sql);
+		db.run(sql, [], (error, results) => {
+				if(error) { console.log(error) }
+				else {
+						console.log("Deleted a job.");
+				}
+		});
+		res.redirect("/jobs");
 });
 
 
