@@ -30,6 +30,18 @@ app.get('/', function(req, res) {
     res.render("index.ejs");
 });
 
+app.get('/edit/jobs', function(req, res) {
+		var job_id = req.query.id;
+		sql = "SELECT * FROM JobInfo WHERE JobID='" + job_id + "'";
+		db.each(sql, (err, data) => {
+				if(err){
+						console.log(err);
+				} else {
+						res.render('edit_job.ejs', { title: 'job-data', jobData: data } );
+				}
+		});
+});
+
 app.get('/delete_job_confirmation', function(req,res){
 		var sql = "SELECT * FROM JobInfo WHERE JobID=" + req.query.id;
 		db.each(sql, function(err, data) {
@@ -111,7 +123,7 @@ app.post('/sortJobs', function(req,res){
   if(req.body.lafayette  != undefined){ franchises.push(1); }
   if(req.body.batonrouge != undefined){ franchises.push(2); }
   if(req.body.neworleans != undefined){ franchises.push(3); }
-  var sql = 'SELECT ClientID, Month, Day, jYear, OriginalStreetAddress, OriginalCity, DestinationStreetAddress, DestinationCity FROM JobInfo ';
+  var sql = 'SELECT ClientID, JobID, Month, Day, jYear, OriginalStreetAddress, OriginalCity, DestinationStreetAddress, DestinationCity FROM JobInfo ';
   if(franchises.length != 0){
     sql = sql + 'WHERE ';
     if(franchises.length == 1){ sql = sql + 'FranchiseID=' + franchises[0]; }
@@ -249,6 +261,40 @@ app.post('/add', function(req,res){
 				});
 		}
 });
+
+
+app.post('/editJob', function(req,res){
+		// Job Identifier for SQL
+		var jobID = req.body.JobID;
+
+		// For text and number fields that users have the option to leave blank. The following code checks to see if they are blank
+		// so the SQL only updates what was edited.
+		var originalCity = false;
+		var destCity = false;
+		var originalAddress = false;
+		var destAddress = false;
+		var moveMonth = false;
+		var moveDay = false;
+		var moveYear = false;
+		if(req.body.DestinationCity.length > 0)   { destCity = true; }
+		if(req.body.OriginalCity.length > 0)      { originalCity = true; }
+		if(req.body.OriginalStreet.length > 0)    { originalAddress = true; }
+		if(req.body.DestinationStreet.length > 0) { destAddress = true; }
+		if(req.body.MoveMonth.length > 0)         { moveMonth = true; }
+		if(req.body.MoveDay.length > 0)           { moveDay = true; }
+		if(req.body.MoveYear.length > 0)          { moveYear = true; }
+
+		// The 1 field value that will always have a value is the dropdown selection for the chosen Franchise.
+		// this checks to see if that value was changed.
+		var changedFID = false;
+		var oFID = Number(req.body.hiddenFID); // Original value
+		var eFID = Number(req.body.Franchise); // Potentially edited value
+		if(eFID != oFID){ changedFID = true; }
+		var sql = "UPDATE JobInfo SET ";
+
+
+});
+
 
 app.post('/editEmployee', function(req,res){
 		var fBlank = false;
