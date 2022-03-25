@@ -1,7 +1,7 @@
-# Installation
-## Install Server Dependencies
-- Install XAMPP
-- Install Node.js/npm
+# Deployment Steps
+
+## Install Dependencies
+- Install Nodejs & npm package manager
 
 ## Clone Repository
 ```sh
@@ -14,34 +14,15 @@ cd la-college-movers
 ```sh
 npm install
 ```
-
-## MySQL & Apache Configuration
-- Open XAMPP and go to the manage servers tab.
-- Enable MySQL Database
-- Enable Apache Web Server
-
-## Import Database to MySQL
+## Start Server Web/SQL Server
 ```sh
-mysql -u root
+npm start
 ```
-- In MySQL Shell
-```
-CREATE DATABASE MoveDB;
-exit;
-```
-- Make Sure You Are In The la-college-movers Directory, Then Enter This Command:
-```sh  
-mysql -u root MoveDB < MovingDB.sql 
-```
-
-# Start Website Server
-```sh
-  npm start
-```
-Or 
+Or
 ```sh
 node index.js
 ```
+
 # Access Website
-- Open Browser
-- Enter this into URL bar: [http://localhost:5000](http://localhost:5000)
+- Open Web Browser
+- Go To This URL: [http://localhost:5000](http://localhost:5000)

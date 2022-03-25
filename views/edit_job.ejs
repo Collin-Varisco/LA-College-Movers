@@ -1,0 +1,44 @@
+<html>
+  <link rel="stylesheet" href="/css/style.css" />
+  <body>
+      <div class="schedule-panel">
+      <h2>Edit Job</h2>
+
+      <form action="/editJob" method="POST">
+        <fieldset>
+        <h3>Closest Franchise Location</h1>
+
+        <select name="Franchise" id="fran">
+          <option value="1">Lafayette</option>
+          <option value="2">Baton Rouge</option>
+          <option value="3">New Orleans</option>
+        </select>
+        <h3>Locations (Both Addresses Must Be In Louisiana)</h3>
+        <label for="OriginalCity">Moving From (City)</label>
+        <input type="text" placeholder="<%=jobData.OriginalCity%>" name="OriginalCity" id="OriginalCity">
+        <label for="OriginalStreet">Moving From (Street Address)</label>
+        <input type="text" placeholder="<%=jobData.OriginalStreetAddress%>" name="OriginalStreet" id="OriginalStreet">
+        <label for="DestinationCity">Moving To (City)</label>
+        <input type="text" placeholder="<%=jobData.DestinationCity%>" name="DestinationCity" id="DestinationCity">
+        <label for="DestinationStreet">Moving To (Street Address)</label>
+        <input type="text" placeholder="<%=jobData.DestinationStreetAddress%>" name="DestinationStreet" id="DestinationStreet">
+        <h3>Job Date</h3>
+        <label for="MoveMonth">Month (1 - 12)</label>
+        <input type="number" step="1" placeholder="<%=jobData.Month%>" name="MoveMonth">
+        <label for="MoveDay">Day</label>
+        <input type="number" step="1" placeholder="<%=jobData.Day%>" name="MoveDay">
+        <label for="MoveYear">Year</label>
+        <input type="number" step="1" placeholder="<%=jobData.jYear%>" name="MoveYear"><br><br>
+								<input type="hidden" name="hiddenFID" id="hiddenFranchiseID" value="<%=jobData.FranchiseID%>">
+								<input type="hidden" name="JobID" value="<%=jobData.JobID%>">
+        <input type="submit" name="submit" value="Submit">
+        </fieldset>
+      </form>
+    </div>
+  </body>
+
+		<script>
+				var FranchiseID = document.getElementById("hiddenFranchiseID").value;
+				document.getElementById("fran").value = FranchiseID;
+		</script>
+</html>

@@ -3,11 +3,11 @@
 <link rel="stylesheet" href="/css/style.css" />
 <head>
   <title>Clients</title>
-  
+
 </head>
 <body>
-    <button class="home-button" onclick="location.href='/'">Home</button> 
-    
+    <button class="home-button" onclick="location.href='/'">Home</button>
+
     <div class="options-panel">
     <form action="/sortEmployees" method="POST">
         <fieldset>
@@ -31,21 +31,20 @@
                 <th>Phone Number</th>
                 <th>Modify</th>
             </tr>
-            
+
             <%
             if(employeeData.length!=0){
-            var i=1;
             employeeData.forEach(function(data){
             %>
             <tr>
-               
-                <td><%=data.ClientID %></td>
+
+                <td id="idCell"><%=data.ClientID %></td>
                 <td><%=data.Fname %> <%=data.Lname %></td>
                 <td><%=data.Email %></td>
                 <td><%=data.PhoneNumber %></td>
-                <td><a href="/employees/edit/<%=data.id%>">Edit</a>
+																<td id="editCell"><a href="/edit/Clients/<%=data.ClientID%>">Edit</a>
             </tr>
-            <%  i++; }) %>
+            <% }) %>
             <% } else{ %>
                 <tr>
                     <td colspan="7">No Data</td>

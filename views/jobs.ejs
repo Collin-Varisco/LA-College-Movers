@@ -5,8 +5,8 @@
   <title>Jobs</title>
 </head>
 <body>
-    <button class="home-button" onclick="location.href='/'">Home</button> 
-    
+    <button class="home-button" onclick="location.href='/'">Home</button>
+
     <div class="options-panel">
     <form action="/sortJobs" method="POST">
         <fieldset>
@@ -48,20 +48,22 @@
                 <th>Date</th>
                 <th>First Address</th>
                 <th>Destination</th>
-                <th>Modify</th> 
+																<th>Client</th>
+                <th>Modify</th>
                 <th>Remove</th>
-            
+
             <%
             if(employeeData.length!=0){
             var i=1;
             employeeData.forEach(function(data){
             %>
-            <tr> 
-                <td><%=data.Month %>-<%=data.Day %>-<%=data.jYear %></td>
+            <tr>
+                <td id="jobDate"><%=data.Month %>-<%=data.Day %>-<%=data.jYear %></td>
                 <td><%=data.OriginalStreetAddress %><br><%=data.OriginalCity %>, Louisiana</td>
                 <td><%=data.DestinationStreetAddress %><br><%=data.DestinationCity %>, Louisiana</td>
-                <td><a href="/jobs/edit/<%=data.JobID%>">Edit</td>
-                <td><a href="/jobs/delete/<%=data.JobID%>">Delete</a></td>
+																<td style="text-align: center;"><a href="/client_info?id=<%=data.ClientID %>">Client Info</a></td>
+																<td><a id="editJob" href="http://localhost:5000/edit/jobs?id=<%=data.JobID%>">Edit</a></td>
+                <td><a href="/delete_job_confirmation?id=<%=data.JobID%>">Delete</a></td>
             <%  i++; }) %>
             <% } else{ %>
                 <tr>
