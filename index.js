@@ -30,6 +30,10 @@ app.get('/', function(req, res) {
     res.render("index.ejs");
 });
 
+app.get('/employees/add', function(req, res) {
+		res.render('add_employee.ejs');
+});
+
 app.get('/edit/jobs', function(req, res) {
 		var job_id = req.query.id;
 		sql = "SELECT * FROM JobInfo WHERE JobID='" + job_id + "'";
