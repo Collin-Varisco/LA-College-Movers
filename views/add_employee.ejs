@@ -1,0 +1,52 @@
+<html>
+		<style>
+				body {
+						background-color: #121212;
+						color: #efefef;
+						width: 50%;
+						margin: 0 auto;
+						text-align:center;
+						margin-top: 20%;
+				}
+		</style>
+
+
+		<body>
+				<h1 style="text-align: center;">Add Employee</h1>
+				<form action="/add_new_employee" onsubmit="return goBack()" method="POST" id="editEmployeeForm">
+						<fieldset>
+								<p>First Name</p>
+								<input type="text" name="Fname" required></input></h2>
+								<p>Last Name</p>
+								<input type="text" name="Lname" required></input>
+								<br>
+								<p id="franchise-id">Franchise</p>
+
+								<select name="Franchise" id="fran" required>
+												<option value="1">Lafayette</option>
+												<option value="2">Baton Rouge</option>
+												<option value="3">New Orleans</option>
+								</select>
+								<br>
+								<p>Position</p>
+								<select name="Position" id="pos" required>
+												<option value="Mover">Mover</option>
+												<option value="Manager">Manager</option>
+												<option value="Customer Support">Customer Support</option>
+								</select>
+								<br><br>
+								<input type="submit" name="submit" value="Submit" form="editEmployeeForm">
+				</fieldset>
+		</form>
+		</body>
+		<script>
+				var position = document.getElementById("hiddenPosition").value;
+				var EmpID = document.getElementById("hiddenID").value;
+				var FranchiseID = document.getElementById("hiddenFranchiseID").value;
+				document.getElementById("fran").value = FranchiseID;
+				document.getElementById("pos").value = position;
+				function goBack(){
+						window.location.href = "/employees";
+				}
+		</script>
+</html>

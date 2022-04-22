@@ -30,6 +30,10 @@ app.get('/', function(req, res) {
     res.render("index.ejs");
 });
 
+app.get('/employees/add', function(req, res) {
+		res.render('add_employee.ejs');
+});
+
 app.get('/edit/jobs', function(req, res) {
 		var job_id = req.query.id;
 		sql = "SELECT * FROM JobInfo WHERE JobID='" + job_id + "'";
@@ -291,56 +295,8 @@ app.post('/editJob', function(req,res){
 		var eFID = Number(req.body.Franchise); // Potentially edited value
 		if(eFID != oFID){ changedFID = true; }
 		var sql = "UPDATE JobInfo SET ";
-		var firstConcat = true;
 
-		if (destCity) {
-			if(firstConcat){ sql = sql + "DestinationCity= '" + req.body.DestinationCity + "'"; firstConcat = false; }
-			else { sql = sql + ", DestinationCity= '" + req.body.DestinationCity + "'"; }		
-		}
-		
-		if (originalCity) {
-			if(firstConcat) { sql = sql + "OriginalCity= '" + req.body.OriginalCity + "'"; firstConcat = false; }
-			else {sql = sql + ", OriginalCity= '" + req.body.OriginalCity + "'";}
-		}
 
-		if (originalAddress) {
-			if(firstConcat) { sql = sql + "OriginalStreetAddress= '" + req.body.OriginalStreet + "'"; firstConcat = false;}
-			else { sql = sql + ", OriginalStreetAddress= '" + req.body.OriginalStreet + "'";}
-		}
-
-		if (destAddress) {
-			if(firstConcat) { sql = sql + "DestinationStreetAddress= '" + req.body.DestinationStreet + "'"; firstConcat = false;}
-			else { sql = sql + ", DestinationStreetAddress= '" + req.body.DestinationStreet + "'"; }
-		}
-
-		if (moveMonth) {
-			if(firstConcat) { sql = sql + "Month=" + req.body.MoveMonth; firstConcat = false;}
-			else { sql = sql + ", Month=" + req.body.MoveMonth; }
-		}
-
-		if (moveDay) {
-			if(firstConcat) { sql = sql + "Day=" + req.body.MoveDay; firstConcat = false;}
-			else { sql = sql + ", Day=" + req.body.MoveDay; }
-		}
-
-		if (moveYear) {
-			if(firstConcat) { sql = sql + "jYear=" + req.body.MoveYear; firstConcat = false;}
-			else { sql = sql + ", jYear=" + req.body.MoveYear; }
-		}
-
-		if (changedFID) {
-			if(firstConcat) { sql = sql + "FranchiseID=" + req.body.MoveFranchise; firstConcat = false}
-			else { sql = sql + ", FranchiseID=" + req.body.MoveFranchise; }
-		}
-
-		sql = sql + " WHERE JobId=" + req.body.JobID;
-
-		db.run(sql, [], (error, results) => {
-	            if (error) { console.log(error) }
-		        else { console.log("Job Information Updated"); }
-		});
-
-		res.redirect("/jobs");
 });
 
 
