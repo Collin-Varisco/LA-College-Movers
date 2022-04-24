@@ -236,27 +236,21 @@ app.post('/add', function(req,res){
     res.render("schedule_conflict.ejs", { title: 'schedule-conflict', employeeData: data } );
   }
   else {
-				db.run(
-						'INSERT INTO ClientInfo (PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?)',
-						[req.body.PhoneNumber, req.body.ClientEmail, req.body.ClientFname, req.body.ClientLname],
-						(error, results) => {
-								if (error) { console.log(error) };
-								console.log("Client Added");
-				});
+				// Protect against SQL injection attack.
+				const insertClient = db.prepare("INSERT INTO ClientInfo (PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?)");
+				insertClient.run([req.body.PhoneNumber, req.body.ClientEmail, req.body.ClientFname, req.body.ClientLname]);
+				insertClient.finalize();
+
 				var clientID_sql = "SELECT ClientID FROM ClientInfo WHERE PhoneNumber='" + req.body.PhoneNumber + "' AND Email='" + req.body.ClientEmail + "'";
+				// db.all() is to find the ClientID value for the client that was just added. That value will be inserted in the JobInfo table.
 				db.all(clientID_sql, (err, data) => {
 					if(err){
 							console.log(err);
 					} else {
-								db.run(
-										'INSERT INTO JobInfo (ClientId, Day,Month,jYear,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress, FranchiseID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
-										[data[0]["ClientID"], req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear, req.body.OriginalCity, req.body.OriginalStreet, req.body.DestinationCity, req.body.DestinationStreet, req.body.Franchise],
-										(error, results) => {
-												if (error) { console.log(error) }
-												else {
-														console.log("Job Added");
-												}
-								});
+								// Protect against SQL injection attack
+								const insertJob = db.prepare("INSERT INTO JobInfo (ClientId, Day,Month,jYear,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress, FranchiseID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+								insertJob.run([data[0]["ClientID"], req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear, req.body.OriginalCity, req.body.OriginalStreet, req.body.DestinationCity, req.body.DestinationStreet, req.body.Franchise]);
+								insertJob.finalize();
 					}
 				});
 		}
@@ -295,9 +289,9 @@ app.post('/editJob', function(req,res){
 
 		if (destCity) {
 			if(firstConcat){ sql = sql + "DestinationCity= '" + req.body.DestinationCity + "'"; firstConcat = false; }
-			else { sql = sql + ", DestinationCity= '" + req.body.DestinationCity + "'"; }		
+			else { sql = sql + ", DestinationCity= '" + req.body.DestinationCity + "'"; }
 		}
-		
+
 		if (originalCity) {
 			if(firstConcat) { sql = sql + "OriginalCity= '" + req.body.OriginalCity + "'"; firstConcat = false; }
 			else {sql = sql + ", OriginalCity= '" + req.body.OriginalCity + "'";}
