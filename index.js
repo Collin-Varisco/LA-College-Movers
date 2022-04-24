@@ -30,6 +30,10 @@ app.get('/', function(req, res) {
     res.render("index.ejs");
 });
 
+app.get('/employees/add', function(req, res) {
+		res.render('add_employee.ejs');
+});
+
 app.get('/edit/jobs', function(req, res) {
 		var job_id = req.query.id;
 		sql = "SELECT * FROM JobInfo WHERE JobID='" + job_id + "'";
@@ -254,6 +258,7 @@ app.post('/add', function(req,res){
 					}
 				});
 		}
+	res.redirect("/");
 });
 
 
@@ -347,24 +352,29 @@ app.post('/editEmployee', function(req,res){
 		if(req.body.Lname==""){
 				lBlank = true;
 		}
-		var sql = "UPDATE Employee SET ";
-		if(fBlank == false){
-				sql = sql + "Fname='" + req.body.Fname + "', ";
-		}
-		if(lBlank == false){
-				sql = sql + "Lname='" + req.body.Lname + "', ";
-		}
-		sql = sql + "FranchiseID=" + req.body.Franchise + ", ";
-		sql = sql + "Position='" + req.body.Position + "' WHERE EmployeeID=" + req.body.EmployeeID;
-		console.log(sql);
 
-		db.run(
-			 sql, [], (error, results) => {
-						if (error) { console.log(error) }
-						else {
-								console.log("Employee Information Updated");
-						}
-		});
+		var sql = "UPDATE Employee SET ";
+
+		if(fBlank == true && lBlank == true){
+				const employeeStatement = db.prepare("UPDATE Employee SET FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID);
+				employeeStatement.run([req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
+		if(lBlank == false && fBlank == true){
+				const employeeStatement = db.prepare("UPDATE Employee SET Lname = ?, FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID)
+				employeeStatement.run([req.body.Lname, req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
+		if(lBlank == true && fBlank == false){
+				const employeeStatement = db.prepare("UPDATE Employee SET Fname = ?, FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID)
+				employeeStatement.run([req.body.Fname, req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
+		if(lBlank == false && fBlank == false){
+				const employeeStatement = db.prepare("UPDATE Employee SET Fname = ?, Lname = ?, FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID)
+				employeeStatement.run([req.body.Fname, req.body.Lname, req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
 		res.redirect("/employees");
 });
 
@@ -380,67 +390,5 @@ app.post('/deleteJob', function(req,res){
 		res.redirect("/jobs");
 });
 
-
-/* AUTHENTICATION CODE
- * -------------------
-const cookieParser = require("cookie-parser");
-const sessions = require("express-session");
-
-//[TODO] Use a function to randomly generate secret
-const one_day = 1000 * 60 * 60 * 24;
-app.use(sessions({
-    secret: "thisIsASecret",
-    saveUninitialized:true,
-    cookie: { maxAge: one_day },
-    resave: false
-}));
-
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-//example login Authentication
-var exampleUsername = "user1";
-var examplePassword = "password1";
-var session;
-app.get('/',(req,res) => {
-    session=req.session;
-    if(session.userid){
-        res.send("Welcome User <a href=\'/logout'>click to logout</a>");
-    }else
-    res.render('login.ejs')
-});
-
-app.get('/logout',(req,res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
-
-app.post('/user',(req,res) => {
-    if(req.body.username == exampleUsername && req.body.password == examplePassword){
-        session=req.session;
-        session.userid=req.body.username;
-        console.log(req.session)
-        res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a><a href='/clients'>clients</a>`);
-    }
-    else{
-        res.send('Invalid username or password');
-    }
-})
-
-
-app.get('/clients',(req,res) => {
-    if(req.session.userid==exampleUsername){
-      console.log(req.session)
-      var sql = 'SELECT * FROM ClientInfo WHERE ClientID IN (SELECT ClientID FROM JobInfo WHERE JobInfo.FranchiseID=1)';
-      connection.query(sql, function (err, data, fields) {
-        if (err) throw err;
-        res.render("clients.ejs", {title: 'Job List', employeeData: data} );
-      })
-    }
-    else{
-        res.send('Invalid username or password');
-    }
-})
-*/
-// </Authentication Code>
 
 app.set('view engine', 'ejs');
