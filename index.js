@@ -390,5 +390,12 @@ app.post('/deleteJob', function(req,res){
 		res.redirect("/jobs");
 });
 
+app.post('/add_new_employee', function(req, res){
+	const addEmployee = db.prepare("INSERT INTO Employee (Fname, Lname, FranchiseID, Position) VALUES(?,?,?,?)");
+	addEmployee.run([req.body.Fname, req.body.Lname, req.body.Franchise, req.body.Position]);
+	addEmployee.finalize();
+	res.redirect("/employees");
+});
+
 
 app.set('view engine', 'ejs');
