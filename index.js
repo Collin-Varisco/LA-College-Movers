@@ -30,6 +30,10 @@ app.get('/', function(req, res) {
     res.render("index.ejs");
 });
 
+app.get('/employees/add', function(req, res) {
+		res.render('add_employee.ejs');
+});
+
 app.get('/edit/jobs', function(req, res) {
 		var job_id = req.query.id;
 		sql = "SELECT * FROM JobInfo WHERE JobID='" + job_id + "'";
@@ -236,30 +240,25 @@ app.post('/add', function(req,res){
     res.render("schedule_conflict.ejs", { title: 'schedule-conflict', employeeData: data } );
   }
   else {
-				db.run(
-						'INSERT INTO ClientInfo (PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?)',
-						[req.body.PhoneNumber, req.body.ClientEmail, req.body.ClientFname, req.body.ClientLname],
-						(error, results) => {
-								if (error) { console.log(error) };
-								console.log("Client Added");
-				});
+				// Protect against SQL injection attack.
+				const insertClient = db.prepare("INSERT INTO ClientInfo (PhoneNumber,Email,Fname,Lname) VALUES(?, ?, ?, ?)");
+				insertClient.run([req.body.PhoneNumber, req.body.ClientEmail, req.body.ClientFname, req.body.ClientLname]);
+				insertClient.finalize();
+
 				var clientID_sql = "SELECT ClientID FROM ClientInfo WHERE PhoneNumber='" + req.body.PhoneNumber + "' AND Email='" + req.body.ClientEmail + "'";
+				// db.all() is to find the ClientID value for the client that was just added. That value will be inserted in the JobInfo table.
 				db.all(clientID_sql, (err, data) => {
 					if(err){
 							console.log(err);
 					} else {
-								db.run(
-										'INSERT INTO JobInfo (ClientId, Day,Month,jYear,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress, FranchiseID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)',
-										[data[0]["ClientID"], req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear, req.body.OriginalCity, req.body.OriginalStreet, req.body.DestinationCity, req.body.DestinationStreet, req.body.Franchise],
-										(error, results) => {
-												if (error) { console.log(error) }
-												else {
-														console.log("Job Added");
-												}
-								});
+								// Protect against SQL injection attack
+								const insertJob = db.prepare("INSERT INTO JobInfo (ClientId, Day,Month,jYear,OriginalCity,OriginalStreetAddress,DestinationCity,DestinationStreetAddress, FranchiseID) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+								insertJob.run([data[0]["ClientID"], req.body.MoveDay, req.body.MoveMonth, req.body.MoveYear, req.body.OriginalCity, req.body.OriginalStreet, req.body.DestinationCity, req.body.DestinationStreet, req.body.Franchise]);
+								insertJob.finalize();
 					}
 				});
 		}
+	res.redirect("/");
 });
 
 
@@ -295,9 +294,9 @@ app.post('/editJob', function(req,res){
 
 		if (destCity) {
 			if(firstConcat){ sql = sql + "DestinationCity= '" + req.body.DestinationCity + "'"; firstConcat = false; }
-			else { sql = sql + ", DestinationCity= '" + req.body.DestinationCity + "'"; }		
+			else { sql = sql + ", DestinationCity= '" + req.body.DestinationCity + "'"; }
 		}
-		
+
 		if (originalCity) {
 			if(firstConcat) { sql = sql + "OriginalCity= '" + req.body.OriginalCity + "'"; firstConcat = false; }
 			else {sql = sql + ", OriginalCity= '" + req.body.OriginalCity + "'";}
@@ -353,24 +352,29 @@ app.post('/editEmployee', function(req,res){
 		if(req.body.Lname==""){
 				lBlank = true;
 		}
-		var sql = "UPDATE Employee SET ";
-		if(fBlank == false){
-				sql = sql + "Fname='" + req.body.Fname + "', ";
-		}
-		if(lBlank == false){
-				sql = sql + "Lname='" + req.body.Lname + "', ";
-		}
-		sql = sql + "FranchiseID=" + req.body.Franchise + ", ";
-		sql = sql + "Position='" + req.body.Position + "' WHERE EmployeeID=" + req.body.EmployeeID;
-		console.log(sql);
 
-		db.run(
-			 sql, [], (error, results) => {
-						if (error) { console.log(error) }
-						else {
-								console.log("Employee Information Updated");
-						}
-		});
+		var sql = "UPDATE Employee SET ";
+
+		if(fBlank == true && lBlank == true){
+				const employeeStatement = db.prepare("UPDATE Employee SET FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID);
+				employeeStatement.run([req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
+		if(lBlank == false && fBlank == true){
+				const employeeStatement = db.prepare("UPDATE Employee SET Lname = ?, FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID)
+				employeeStatement.run([req.body.Lname, req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
+		if(lBlank == true && fBlank == false){
+				const employeeStatement = db.prepare("UPDATE Employee SET Fname = ?, FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID)
+				employeeStatement.run([req.body.Fname, req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
+		if(lBlank == false && fBlank == false){
+				const employeeStatement = db.prepare("UPDATE Employee SET Fname = ?, Lname = ?, FranchiseID = ?, Position = ? WHERE EmployeeID=" + req.body.EmployeeID)
+				employeeStatement.run([req.body.Fname, req.body.Lname, req.body.Franchise, req.body.Position]);
+				employeeStatement.finalize();
+		}
 		res.redirect("/employees");
 });
 
@@ -386,67 +390,12 @@ app.post('/deleteJob', function(req,res){
 		res.redirect("/jobs");
 });
 
-
-/* AUTHENTICATION CODE
- * -------------------
-const cookieParser = require("cookie-parser");
-const sessions = require("express-session");
-
-//[TODO] Use a function to randomly generate secret
-const one_day = 1000 * 60 * 60 * 24;
-app.use(sessions({
-    secret: "thisIsASecret",
-    saveUninitialized:true,
-    cookie: { maxAge: one_day },
-    resave: false
-}));
-
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-//example login Authentication
-var exampleUsername = "user1";
-var examplePassword = "password1";
-var session;
-app.get('/',(req,res) => {
-    session=req.session;
-    if(session.userid){
-        res.send("Welcome User <a href=\'/logout'>click to logout</a>");
-    }else
-    res.render('login.ejs')
+app.post('/add_new_employee', function(req, res){
+	const addEmployee = db.prepare("INSERT INTO Employee (Fname, Lname, FranchiseID, Position) VALUES(?,?,?,?)");
+	addEmployee.run([req.body.Fname, req.body.Lname, req.body.Franchise, req.body.Position]);
+	addEmployee.finalize();
+	res.redirect("/employees");
 });
 
-app.get('/logout',(req,res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
-
-app.post('/user',(req,res) => {
-    if(req.body.username == exampleUsername && req.body.password == examplePassword){
-        session=req.session;
-        session.userid=req.body.username;
-        console.log(req.session)
-        res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a><a href='/clients'>clients</a>`);
-    }
-    else{
-        res.send('Invalid username or password');
-    }
-})
-
-
-app.get('/clients',(req,res) => {
-    if(req.session.userid==exampleUsername){
-      console.log(req.session)
-      var sql = 'SELECT * FROM ClientInfo WHERE ClientID IN (SELECT ClientID FROM JobInfo WHERE JobInfo.FranchiseID=1)';
-      connection.query(sql, function (err, data, fields) {
-        if (err) throw err;
-        res.render("clients.ejs", {title: 'Job List', employeeData: data} );
-      })
-    }
-    else{
-        res.send('Invalid username or password');
-    }
-})
-*/
-// </Authentication Code>
 
 app.set('view engine', 'ejs');
