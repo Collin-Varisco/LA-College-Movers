@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/css/style.css" />
+<head>
+  <title>Franchise Analysis</title>
+
+</head>
+<body>
+    <button class="home-button" onclick="location.href='/'">Home</button>
+
+    <div class="options-panel">
+    <form action="/sortEmployees" method="POST">
+        <fieldset>
+            <h3>Franchises</h1>
+            <input type="checkbox" id="lafayette" name="lafayette">
+            <label for="lafayette">Lafayette</label><br>
+            <input type="checkbox" id="batonrouge" name="batonrouge">
+            <label for="batonrouge">Baton Rouge</label><br>
+            <input type="checkbox" id="neworleans" name="neworleans">
+            <label for="neworleans">New Orleans</label><br><br>
+            <input type="submit" name="submit" value="Submit">
+        </fieldset>
+    </form>
+    </div>
+        <h2 class="textAlignC">Franchise Analysis</h2>
+        <table class="center-table" border="1">
+            <tr>
+                <th>Franchise</th>
+                <th>Total Jobs</th>
+            </tr>
+
+            <%
+            if(franchiseData.length!=0){
+            franchiseData.forEach(function(data){
+            %>
+        <tr>
+                <% if(data.FID == 1){ %>
+                    <td>Lafayette</td>
+                    <td><%=data.jcount %></td>
+                <% } else if(data.FID == 2){ %>
+                    <td>Baton Rouge</td>
+                    <td><%=data.jcount %></td>
+                <% } else if(data.FID == 3){ %>
+                    <td>New Orleans</td>
+                    <td><%=data.jcount %></td>
+                <% } %>
+            </tr>
+            <% }) %>
+            <% } else{ %>
+                <tr>
+                    <td colspan="7">No Data</td>
+                </tr>
+            <% } %>
+        </table>
+</body>
+
+    <script>
+    </script>
+</html>

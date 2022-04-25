@@ -68,6 +68,17 @@ app.get('/clients', function(req, res) {
     })
 });
 
+app.get('/analysis', function(req, res) {
+	var sql = 'SELECT FranchiseID AS FID, COUNT(JobID) as jcount FROM JobInfo WHERE FranchiseID=1 UNION SELECT FranchiseID as FID, COUNT(JobID) AS jcount FROM JobInfo WHERE FranchiseID=2 UNION SELECT FranchiseID as FID, COUNT(JobID) AS jcount FROM JobInfo WHERE FranchiseID=3';
+    db.all(sql, function(err, data) {
+      if(err){ throw err }
+						else {
+								res.render("analysis.ejs", {title: 'Franchise Data', franchiseData: data} );
+						}
+    });
+});
+
+
 // Jobs page. SQL Sorts by date in descending order and returns the results to the jobs page.
 app.get('/jobs', function(req, res) {
     var sql = 'SELECT * FROM JobInfo ORDER BY jYear DESC, Month DESC, Day DESC';
@@ -203,14 +214,14 @@ app.post('/sortEmployees', function(req,res){
     }
   }
   if(positions.length != 0 || franchises.length != 0){
-    connection.query(sql, function (err, data, fields) {
+    db.all(sql, function (err, data, fields) {
       if (err) throw err;
       res.render("employees.ejs", {title: 'Employee List', employeeData: data} );
     })
   }
   if(positions.length == 0 && franchises.length == 0){
     var default_sql='SELECT * FROM Employee';
-    connection.query(default_sql, function (err, data, fields) {
+    db.all(default_sql, function (err, data, fields) {
       if (err) throw err;
       res.render("employees.ejs", {title: 'Employee List', employeeData: data} );
     });

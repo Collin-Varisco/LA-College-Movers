@@ -9,14 +9,22 @@
     <div class="options-panel">
     <form action="/sortEmployees" method="POST">
         <fieldset>
+          <div class="boxes">
+          <h2> Sort </h2>
           <h3>Positions</h3>
-          <input type="checkbox" id="movers" name="movers">Movers<br>
-          <input type="checkbox" id="managers" name="managers">Manager<br>
+          <label>Movers: </label><input type="checkbox" id="movers" name="movers"><br>
+          <label>Customer Support: </label><input type="checkbox" id="support" name"support"><br>
+          <label>Manager: </label><input type="checkbox" id="managers" name="managers"><br>
+          <br>
+          <br>
           <h3>Franchises</h3>
-          <input type="checkbox" id="lafayette" name="lafayette">Lafayette<br>
-          <input type="checkbox" id="batonrouge" name="batonrouge">Baton Rouge<br>
-          <input type="checkbox" id="neworleans" name="neworleans">New Orleans<br><br>
-          <input type="submit" name="submit" value="Submit">
+          <label>Lafayette: </label><input type="checkbox" id="lafayette" name="lafayette"><br>
+          <label>Baton Rouge: </label><input type="checkbox" id="batonrouge" name="batonrouge"><br>
+          <label>New Orleans: </label><input type="checkbox" id="neworleans" name="neworleans"><br><br>
+          <br>
+          <br>
+          </div>
+          <input type="submit" id="employeeSubmit" name="submit" value="Submit">
         </fieldset>
     </form>
     </div>
