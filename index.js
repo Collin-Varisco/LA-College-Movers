@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const server = require("http").Server(app);
 const ejs = require('ejs');
-server.listen(5000, 'localhost');
+server.listen(8080, 'localhost');
 const util = require('util');
 
 app.set("views", "./views");
