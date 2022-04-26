@@ -27,8 +27,9 @@
                 <!--<th>Franchise</th>
 																<th>Total Jobs</th>-->
 																<th>Franchise</th>
-																<th>Past Month</th>
-																<th>Total Jobs</th>
+																<th>Number of Employees</th>
+																<th>Jobs (Past Month)</th>
+																<th>Jobs (Total)</th>
             </tr>
 
             <%
@@ -39,14 +40,17 @@
 
                 <% if(data.FID == 1){ %>
                     <td>Lafayette</td>
+																				<td><%=data.empCount%></td>
 																				<td><%=data.jmonth%></td>
 																				<td><%=data.lafCount%></td>
                 <% } else if(data.FID == 2){ %>
 																				<td>Baton Rouge</td>
+																				<td><%=data.empCount%></td>
 																				<td><%=data.jmonth%></td>
 																				<td><%=data.lafCount%></td>
                 <% } else if(data.FID == 3){ %>
                     <td>New Orleans</td>
+																				<td><%=data.empCount%></td>
 																				<td><%=data.jmonth%></td>
 																				<td><%=data.lafCount%></td>
                 <% } %>

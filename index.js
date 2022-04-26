@@ -82,8 +82,16 @@ app.get('/analysis', function(req, res) {
 
 		var sql = '';
 		if(includeLastYear == false){
-				sql = 'SELECT FranchiseID as FID, t2.lafCount, t1.jmonth FROM (SELECT FranchiseID, COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=1 AND jYear=' + year + ' AND Month=' + month + ' OR Month=' + (month - 1) + ' AND jYear=' + year + ' AND FranchiseID=1) AS t1, '
-				sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=1) as t2'
+				var totalFranchises = 3;
+				for(var i = 1; i < (totalFranchises + 1); i++){
+						sql = sql + 'SELECT e1.empCount, FranchiseID as FID, t2.lafCount, t1.jmonth FROM (SELECT FranchiseID, COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=' + i + ' AND jYear=' + year + ' AND Month=' + month + ' OR Month=' + (month - 1) + ' AND jYear=' + year + ' AND FranchiseID=' + i + ') AS t1, '
+						sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=' + i + ') as t2, (SELECT COUNT(EmployeeID) as empCount FROM EMPLOYEE WHERE FranchiseID=' + i + ') as e1';
+						if (i < totalFranchises){
+								sql = sql + ' UNION ';
+						}
+				}
+
+				/*
 				sql = sql + ' UNION ';
 				sql = sql + 'SELECT FranchiseID as FID, t2.lafCount, t1.jmonth FROM (SELECT FranchiseID, COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=2 AND jYear=' + year + ' AND Month=' + month + ' OR Month=' + (month - 1) + ' AND jYear=' + year + ' AND FranchiseID=2) AS t1, '
 				sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=2) as t2'
@@ -93,6 +101,7 @@ app.get('/analysis', function(req, res) {
 		} else {
 				sql = 'SELECT FranchiseID AS FID, COUNT(JobID) as jcount, t1.jmonth FROM (SELECT COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=1 AND jYear=' + year + ' AND Month=' + month + ' OR jYear=' + lastYear + ' AND Month=' + lastMonth + ') AS t1, JobInfo '
 				sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=1) as t2'
+				*/
 		}
 
 
