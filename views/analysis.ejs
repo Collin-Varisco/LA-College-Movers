@@ -7,26 +7,28 @@
 </head>
 <body>
     <button class="home-button" onclick="location.href='/'">Home</button>
-
+				<!--
     <div class="options-panel">
     <form action="/sortEmployees" method="POST">
         <fieldset>
             <h3>Franchises</h1>
-            <input type="checkbox" id="lafayette" name="lafayette">
-            <label for="lafayette">Lafayette</label><br>
-            <input type="checkbox" id="batonrouge" name="batonrouge">
-            <label for="batonrouge">Baton Rouge</label><br>
-            <input type="checkbox" id="neworleans" name="neworleans">
-            <label for="neworleans">New Orleans</label><br><br>
+												<input class="checkBox" type="checkbox" id="lafayette" name="lafayette"><div class="checkBoxText">Lafayette</div><br>
+												<input class="checkBox" type="checkbox" id="batonrouge" name="batonrouge"><div class="checkBoxText">Baton Rouge</div><br>
+												<input class="checkBox" type="checkbox" id="neworleans" name="neworleans"><div class="checkBoxText">New Orleans</div><br>
+												<br>
             <input type="submit" name="submit" value="Submit">
         </fieldset>
     </form>
     </div>
+				-->
         <h2 class="textAlignC">Franchise Analysis</h2>
         <table class="center-table" border="1">
             <tr>
-                <th>Franchise</th>
-                <th>Total Jobs</th>
+                <!--<th>Franchise</th>
+																<th>Total Jobs</th>-->
+																<th>Franchise</th>
+																<th>Past Month</th>
+																<th>Total Jobs</th>
             </tr>
 
             <%
@@ -34,16 +36,21 @@
             franchiseData.forEach(function(data){
             %>
         <tr>
+
                 <% if(data.FID == 1){ %>
                     <td>Lafayette</td>
-                    <td><%=data.jcount %></td>
+																				<td><%=data.jmonth%></td>
+																				<td><%=data.lafCount%></td>
                 <% } else if(data.FID == 2){ %>
-                    <td>Baton Rouge</td>
-                    <td><%=data.jcount %></td>
+																				<td>Baton Rouge</td>
+																				<td><%=data.jmonth%></td>
+																				<td><%=data.lafCount%></td>
                 <% } else if(data.FID == 3){ %>
                     <td>New Orleans</td>
-                    <td><%=data.jcount %></td>
+																				<td><%=data.jmonth%></td>
+																				<td><%=data.lafCount%></td>
                 <% } %>
+
             </tr>
             <% }) %>
             <% } else{ %>

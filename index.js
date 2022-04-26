@@ -69,7 +69,34 @@ app.get('/clients', function(req, res) {
 });
 
 app.get('/analysis', function(req, res) {
-	var sql = 'SELECT FranchiseID AS FID, COUNT(JobID) as jcount FROM JobInfo WHERE FranchiseID=1 UNION SELECT FranchiseID as FID, COUNT(JobID) AS jcount FROM JobInfo WHERE FranchiseID=2 UNION SELECT FranchiseID as FID, COUNT(JobID) AS jcount FROM JobInfo WHERE FranchiseID=3';
+		var month = new Date().getMonth() + 1;
+		var lastMonth = month;
+		var year = new Date().getFullYear();
+		var lastYear = year - 1;
+
+		var includeLastYear = false;
+		if(month == 1){
+				includeLastYear = true;
+				lastMonth = 12;
+		}
+
+		var sql = '';
+		if(includeLastYear == false){
+				sql = 'SELECT FranchiseID as FID, t2.lafCount, t1.jmonth FROM (SELECT FranchiseID, COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=1 AND jYear=' + year + ' AND Month=' + month + ' OR Month=' + (month - 1) + ' AND jYear=' + year + ' AND FranchiseID=1) AS t1, '
+				sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=1) as t2'
+				sql = sql + ' UNION ';
+				sql = sql + 'SELECT FranchiseID as FID, t2.lafCount, t1.jmonth FROM (SELECT FranchiseID, COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=2 AND jYear=' + year + ' AND Month=' + month + ' OR Month=' + (month - 1) + ' AND jYear=' + year + ' AND FranchiseID=2) AS t1, '
+				sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=2) as t2'
+				sql = sql + ' UNION ';
+				sql = sql + 'SELECT t1.FID, t2.lafCount, t1.jmonth FROM (SELECT FranchiseID as FID, COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=3 AND jYear=' + year + ' AND Month=' + month + ' OR Month=' + (month - 1) + ' AND jYear=' + year + ' AND FranchiseID=3) AS t1, '
+				sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=3) as t2'
+		} else {
+				sql = 'SELECT FranchiseID AS FID, COUNT(JobID) as jcount, t1.jmonth FROM (SELECT COUNT(JobID) as jmonth FROM JobInfo WHERE FranchiseID=1 AND jYear=' + year + ' AND Month=' + month + ' OR jYear=' + lastYear + ' AND Month=' + lastMonth + ') AS t1, JobInfo '
+				sql = sql + '(SELECT COUNT(JobID) as lafCount FROM JobInfo WHERE FranchiseID=1) as t2'
+		}
+
+
+		//WHERE FranchiseID=1 UNION SELECT FranchiseID as FID, COUNT(JobID) AS jcount FROM JobInfo WHERE FranchiseID=2 UNION SELECT FranchiseID as FID, COUNT(JobID) AS jcount FROM JobInfo WHERE FranchiseID=3';
     db.all(sql, function(err, data) {
       if(err){ throw err }
 						else {

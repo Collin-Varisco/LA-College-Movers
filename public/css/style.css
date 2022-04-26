@@ -92,15 +92,13 @@ th {
 }
 
 .addLink {
-		text-align: center;
-  width: 15%;
-  position: fixed;
-  margin: 0;
-  top: 32%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);;
-		border: 2px solid #efefef;
-
+		position: fixed;
+  left: 0px; bottom: 0px;
+  width: 200px;
+  height:40px;
+  background-color: #121212;
+		color: #efefef;
+  padding: 5px;
 }
 
 .boxes label {
@@ -118,4 +116,15 @@ th {
 
 #employeeSubmit {
   text-align: center;
+}
+
+.checkBox {
+		float: left;
+		margin-top: 5px;
+}
+
+
+.checkBoxText {
+		float: left;
+		margin-left: 25px;
 }
