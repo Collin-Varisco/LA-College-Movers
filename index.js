@@ -264,6 +264,42 @@ app.post('/sortEmployees', function(req,res){
   }
 });
 
+
+app.post('/sortClients', function(req,res){
+  var franchises = [];
+  if(req.body.lafayette  != undefined){ franchises.push(1);        }
+  if(req.body.batonrouge != undefined){ franchises.push(2);        }
+  if(req.body.neworleans != undefined){ franchises.push(3);        }
+  // Form SQL
+  var sql = 'SELECT * FROM ClientInfo WHERE ClientID IN (SELECT ClientID FROM JobInfo WHERE  ';
+  if(franchises.length != 0){
+    if(franchises.length == 1){ sql = sql + 'FranchiseID=' + franchises[0] + ')'; }
+    else {
+      for(var i = 0; i < franchises.length; i++){
+        sql = sql + 'FranchiseID=' + franchises[i];
+        if(i != (franchises.length - 1)){ sql = sql + " OR "; }
+      }
+			sql = sql + ')';
+    }
+  }
+
+	// executed new SQL statement
+  if(franchises.length != 0){
+    db.all(sql, function (err, data, fields) {
+      if (err) throw err;
+      res.render("clients.ejs", {title: 'Employee List', employeeData: data} );
+    })
+  }
+	// execute default sql statement for client page
+  if(franchises.length == 0){
+    var default_sql='SELECT * FROM ClientInfo';
+    db.all(default_sql, function (err, data, fields) {
+      if (err) throw err;
+      res.render("clients.ejs", {title: 'Employee List', employeeData: data} );
+    });
+  }
+});
+
 // Check if the date is valid during when scheduling
 // TODO check for valid month and day of a valid month
 function validDate(Day, Month, year){

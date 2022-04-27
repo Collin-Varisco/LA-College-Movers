@@ -123,6 +123,21 @@ th {
 		margin-top: 5px;
 }
 
+.d-flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.input-checkbox {
+  margin-right: 10px;
+}
 
 .checkBoxText {
 		float: left;

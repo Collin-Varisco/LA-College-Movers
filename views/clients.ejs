@@ -9,16 +9,24 @@
     <button class="home-button" onclick="location.href='/'">Home</button>
 
     <div class="options-panel">
-    <form action="/sortEmployees" method="POST">
+    <form action="/sortClients" method="POST">
         <fieldset>
             <h3>Franchises</h1>
-            <input type="checkbox" id="lafayette" name="lafayette">
-            <label for="lafayette">Lafayette</label><br>
-            <input type="checkbox" id="batonrouge" name="batonrouge">
-            <label for="batonrouge">Baton Rouge</label><br>
-            <input type="checkbox" id="neworleans" name="neworleans">
-            <label for="neworleans">New Orleans</label><br><br>
-            <input type="submit" name="submit" value="Submit">
+            <div class="d-flex flex-row align-items-center">
+            <input class="input-checkbox" type="checkbox" id="lafayette" name="lafayette">
+            <label for="laf">Lafayette</label><br>
+            </div>
+            <div class="d-flex flex-row align-items-center">
+            <input class="input-checkbox" type="checkbox" id="batonrouge" name="batonrouge">
+            <label for="br">Baton Rouge</label><br>
+            </div>
+            <div class="d-flex flex-row align-items-center">
+                <input class="input-checkbox" type="checkbox" id="neworleans" name="neworleans">
+                <label for="nola">New Orleans</label><br>
+            </div>
+            <br>
+            <input id="employeeSubmit" type="submit" name="submit" value="Submit">
+            </div>
         </fieldset>
     </form>
     </div>
