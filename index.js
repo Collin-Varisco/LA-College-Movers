@@ -1,16 +1,16 @@
-const mysql = require('mysql2');
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
-const server = require("http").Server(app);
 const ejs = require('ejs');
-server.listen(8080, 'localhost');
-const util = require('util');
 
+const app = express();
 app.set("views", "./views");
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended: false}));
+
+const server = require("http").Server(app);
+server.listen(8080, 'localhost');
+
 
 // Database activation
 let db = new sqlite3.Database('./db/lamovers.db', (err) => {
