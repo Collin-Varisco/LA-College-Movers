@@ -56,6 +56,16 @@ app.get('/delete_job_confirmation', function(req,res){
 		});
 });
 
+app.get('/delete_employee', function(req,res){
+		var sql = "SELECT * FROM Employee WHERE EmployeeID=" + req.query.id;
+		db.each(sql, function(err, data) {
+				if(err){ throw err }
+				else {
+					res.render('delete_employee_confirmation.ejs', { title: 'Job Info', jobData: data } );
+				}
+		});
+});
+
 app.get('/clients', function(req, res) {
 		  // sql for clients at Franchise #1
     //var sql = 'SELECT * FROM ClientInfo WHERE ClientID IN (SELECT ClientID FROM JobInfo WHERE JobInfo.FranchiseID=1)';
@@ -471,6 +481,18 @@ app.post('/deleteJob', function(req,res){
 				}
 		});
 		res.redirect("/jobs");
+});
+
+app.post('/deleteEmployee', function(req,res){
+		var sql = 'DELETE FROM Employee WHERE EmployeeID=' + req.query.id;
+		console.log(sql);
+		db.run(sql, [], (error, results) => {
+				if(error) { console.log(error) }
+				else {
+						console.log("Deleted a job.");
+				}
+		});
+		res.redirect("/employees");
 });
 
 app.post('/add_new_employee', function(req, res){

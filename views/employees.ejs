@@ -67,8 +67,8 @@
                 <td><%=data.Fname %> <%=data.Lname %></td>
                 <td><%=data.Position %></td>
                 <td><%=data.FranchiseID %></td>
-																<td><a href="/edit/employees?id=<%=data.EmployeeID%>">Edit</a><br>
-                <a href="/employees/delete/<%=data.EmployeeID%>">Delete</a></td>
+                <td><a href="/edit/employees?id=<%=data.EmployeeID%>">Edit</a><br>
+                <a href="/delete_employee?id=<%=data.EmployeeID%>">Delete</a></td>
             </tr>
             <%  i++; }) %>
             <% } else{ %>
