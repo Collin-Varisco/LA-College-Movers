@@ -1,7 +1,7 @@
 # Deployment Steps
 
 ## Install Dependencies
-- Install Nodejs & npm package manager
+- [Install Node.js](https://nodejs.org/en/download/)
 
 ## Clone Repository
 ```sh
@@ -14,7 +14,7 @@ cd la-college-movers
 ```sh
 npm install
 ```
-## Start Server Web/SQL Server
+## Start The Server
 ```sh
 npm start
 ```
