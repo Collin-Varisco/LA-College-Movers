@@ -9,7 +9,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended: false}));
 
 const server = require("http").Server(app);
-server.listen(8080, 'localhost');
+server.listen(8000, 'localhost');
 
 
 // Database activation
