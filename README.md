@@ -1,8 +1,5 @@
 # Deployment Steps
 
-## Install Dependencies
-- [Install Node.js](https://nodejs.org/en/download/)
-
 ## Clone Repository
 ```sh
 git clone https://github.com/Collin-Varisco/LA-College-Movers.git
@@ -18,11 +15,8 @@ npm install
 ```sh
 npm start
 ```
-Or
-```sh
-node index.js
-```
 
 # Access Website
-- Open Web Browser
-- Go To This URL: [http://localhost:8080](http://localhost:8080)
+[http://localhost:8080](http://localhost:8000)
+
+![https://github.com/Collin-Varisco/LA-College-Movers/blob/989b5887461d82abb6cf8a31f278daaf8fb7b762/public/screenshots/la1.png](la1)
